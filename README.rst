@@ -9,7 +9,7 @@ build successfully or not.
 Installation
 ************
 
-* Open ``index.html``, change ``JENKINS_URL`` to put at your Jenkins
+* Open ``index.html``, change ``JENKINS_URL`` to point at your Jenkins
   installation.
 * Open ``index.html`` in a browser.
 
