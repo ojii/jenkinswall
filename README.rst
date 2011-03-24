@@ -15,6 +15,8 @@ Installation
 
 You may optionally serve this file from a real server.
 
+You may also change the ``CLASSES`` and ``TEXT`` variables.
+
 
 *************
 Configuration
