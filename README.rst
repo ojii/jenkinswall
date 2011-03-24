@@ -29,4 +29,4 @@ Configuration
 Screenshot
 **********
 
-.. image:: http://ubuntuone.com/p/jHv/
+See http://ubuntuone.com/p/jHv/
