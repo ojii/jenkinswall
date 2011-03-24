@@ -23,3 +23,10 @@ Configuration
 *************
 
 * Open ``index.html``, change whatever you want.
+
+
+**********
+Screenshot
+**********
+
+.. image:: http://ubuntuone.com/p/jHv/
