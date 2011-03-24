@@ -26,6 +26,10 @@
             body.fail {
                 background: red;
             }
+
+            body.running {
+                background: blue;
+            }
             
             #answer {
                 font-weight: bold;
@@ -39,7 +43,7 @@
             }
         </style> 
     </head> 
-    <body class="success" id="body">
+    <body class="running" id="body">
         <h1>Do our projects build?</h1>
         <div id="answer">Let me check!</div>
         
@@ -48,30 +52,49 @@
         <script>
         window.addEvent('domready', function() {
 
-            var JENKINS_URL = 'http://ci.django-cms.org'
+            var JENKINS_URL = 'http://ci.django-cms.org';
+
+            var TEXT = {
+                OK: "YES!",
+                FAIL: "NO!",
+                RUNNING: "Running..."
+            };
+            
+            var CLASSES = {
+                OK: "success",
+                FAIL: "fail",
+                RUNNING: "running"
+            }
 
             var answer = $('answer');
             var body = $('body');
+            var regex = /_anime$/;
                             
-            function getFailedProjects(jobs){
+            function getStatusProjects(jobs){
                 var fails = [];
+                var buildStatus = "OK";
                 jobs.each(function (job){
                     if (job.color != "blue"){
-                        fails.push(job);
+                        if (job.color.test(regex)){
+                            if (buildStatus == "OK"){
+                                buildStatus = "RUNNING";
+                            }
+                        } else {
+                            fails.push(job);
+                            buildStatus = "FAIL";
+                        }
                     }
                 });
-                return fails;
+                return {
+                    fails: fails,
+                    buildStatus: buildStatus
+                };
             }
 
             function update(jobs){
-                var fails = getFailedProjects(jobs);
-                if (fails.length == 0){
-                    answer.set('text', 'YES!');
-                    body.set('class', 'success');
-                } else {
-                    answer.set('text', 'NO!');
-                    body.set('class', 'fail');
-                }
+                var projectStatus = getStatusProjects(jobs);
+                answer.set('text', TEXT[projectStatus.buildStatus]);
+                body.set('class', CLASSES[projectStatus.buildStatus]);
             }
 
             function check(){
