@@ -54,6 +54,8 @@
 
             var JENKINS_URL = 'http://ci.django-cms.org';
 
+            var INTERVAL = 2500;
+
             var TEXT = {
                 OK: "YES!",
                 FAIL: "NO!",
@@ -68,33 +70,72 @@
 
             var answer = $('answer');
             var body = $('body');
-            var regex = /_anime$/;
-                            
-            function getStatusProjects(jobs){
-                var fails = [];
-                var buildStatus = "OK";
+
+            // Some Constants
+            
+            var OK =        "OK";
+            var FAIL =      "FAIL";
+            var PENDING =   "PENDING";
+            var DISABLED =  "DISABLED";
+            var ABORTED =   "ABORTED";
+            var UNSTABLE =  "UNSTABLE";
+            var RUNNING =   "RUNNING";
+
+            // All color codes allow the '_anime' suffix which indicates a build
+            // is running from the current state to possibly a new state.
+            // General comment to the colors: WTF?
+            var COLORS = {
+                FAIL:       'red',
+                UNSTABLED:  'yellow',
+                OK:         'blue', // WTF?
+                DISABLED:   'disabled',
+                ABORTED:    'aborted',
+                PENDING:    'grey'
+            }
+
+            var R_COLORS = {}
+            Object.each(COLORS, function(key, item){
+                R_COLORS[key] = item;
+                R_COLORS[key + '_anime'] = RUNNING;
+            });
+
+            var ORDER = [OK, RUNNING, FAIL];
+
+             function getStatusProjects(jobs){
+                var splitted = {
+               		FAIL: [],
+               		OK: [],
+               		PENDING: [],
+               		DISABLED: [],
+               		ABORTED: [],
+               		UNSTABLE: []
+                };
+
+                var overallStatus = OK;
+                var oldIndex = ORDER.indexOf(overallStatus);
                 jobs.each(function (job){
-                    if (job.color != "blue"){
-                        if (job.color.test(regex)){
-                            if (buildStatus == "OK"){
-                                buildStatus = "RUNNING";
-                            }
-                        } else {
-                            fails.push(job);
-                            buildStatus = "FAIL";
-                        }
+                    var jobStatus = R_COLORS[job.color];
+                    if (jobStatus == RUNNING){
+                    	var oldColor = job.color.substr(0, job.color.length - 6);
+                    	jobStatus = RUNNING;
+                    } else {
+                        splitted[jobStatus].push(job);
+                    }
+                    var newIndex = ORDER.indexOf(jobStatus);
+                    if (newIndex > oldIndex){
+                    	overallStatus = jobStatus;
                     }
                 });
                 return {
-                    fails: fails,
-                    buildStatus: buildStatus
+                	splitted: splitted,
+                    overallStatus: overallStatus
                 };
             }
 
             function update(jobs){
                 var projectStatus = getStatusProjects(jobs);
-                answer.set('text', TEXT[projectStatus.buildStatus]);
-                body.set('class', CLASSES[projectStatus.buildStatus]);
+                answer.set('text', TEXT[projectStatus.overallStatus]);
+                body.set('class', CLASSES[projectStatus.overallStatus]);
             }
 
             function check(){
@@ -108,7 +149,7 @@
             }
 
             check();
-            check.periodical(5000);
+            check.periodical(INTERVAL);
         });
         </script>        
     </body> 
