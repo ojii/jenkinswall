@@ -24,11 +24,15 @@
             }
             
             body.fail {
-                background: red;
+                background: #f00;
+                background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #f00), color-stop(1, #600));
+                background-image: -moz-linear-gradient(center bottom, #f00 0%, #600 100%);
             }
 
             body.running {
-                background: blue;
+                background: #00f;
+                background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #00f), color-stop(1, #006));
+                background-image: -moz-linear-gradient(center bottom, #00f 0%, #006 100%);
             }
             
             #answer {
@@ -57,16 +61,19 @@
             var INTERVAL = 2500;
 
             var TEXT = {
-                OK: "YES!",
-                FAIL: "NO!",
-                RUNNING: "Running..."
+                OK:         "YES!",
+                FAIL:       "NO!",
+                RUNNING:    "Running..."
             };
             
             var CLASSES = {
-                OK: "success",
-                FAIL: "fail",
-                RUNNING: "running"
+                OK:         "success",
+                FAIL:       "fail",
+                RUNNING:    "running"
             }
+
+            // "REAL" CODE STARTS HERE, stop messing around ;-)
+               
 
             var answer = $('answer');
             var body = $('body');
