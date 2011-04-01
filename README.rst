@@ -9,20 +9,21 @@ build successfully or not.
 Installation
 ************
 
-* Open ``index.html``, change ``JENKINS_URL`` to point at your Jenkins
-  installation.
+* Open ``index.html``, change the URL in the Javascript snippet at the bottom to
+  point at your Jenkins installation.
 * Open ``index.html`` in a browser.
 
 You may optionally serve this file from a real server.
 
-You may also change the ``CLASSES`` and ``TEXT`` variables.
-
+Once I figure out how this stuff (=mootools) works, I'll write up some nice docs
+etc ;-)
 
 *************
 Configuration
 *************
 
-* Open ``index.html``, change whatever you want.
+* Open ``index.html``, change stuff in the initialization of ``JenkinsWall``
+  and/or attach events to it.
 
 
 **********

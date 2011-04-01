@@ -67,7 +67,9 @@
         <script>
         var myWall;
         window.addEvent('domready', function() {
-            myWall = new JenkinsWall();
+            myWall = new JenkinsWall({
+                url: 'http://ci.django-cms.org'
+            });
             myWall.start();
         });
         </script>        
