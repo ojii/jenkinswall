@@ -63,122 +63,13 @@
         
         <script src="https://ajax.googleapis.com/ajax/libs/mootools/1.3.1/mootools-yui-compressed.js"></script>
         <script src="more.js"></script>
+        <script src="jenkinswall.js"></script>
         <script>
+        var myWall;
         window.addEvent('domready', function() {
-
-            var JENKINS_URL = 'http://ci.django-cms.org';
-
-            var INTERVAL = 2500;
-
-            var TEXT = {
-                OK:         "YES!",
-                FAIL:       "NO!",
-                RUNNING:    "Running..."
-            };
-            
-            var CLASSES = {
-                OK:         "success",
-                FAIL:       "fail",
-                RUNNING:    "running"
-            }
-
-            // "REAL" CODE STARTS HERE, stop messing around ;-)
-               
-
-            var answer = $('answer');
-            var body = $('body');
-            var affected = $('affected');
-
-            // Some Constants
-            
-            var OK =        "OK";
-            var FAIL =      "FAIL";
-            var PENDING =   "PENDING";
-            var DISABLED =  "DISABLED";
-            var ABORTED =   "ABORTED";
-            var UNSTABLE =  "UNSTABLE";
-            var RUNNING =   "RUNNING";
-
-            // All color codes allow the '_anime' suffix which indicates a build
-            // is running from the current state to possibly a new state.
-            // General comment to the colors: WTF?
-            var COLORS = {
-                FAIL:       'red',
-                UNSTABLED:  'yellow',
-                OK:         'blue', // WTF?
-                DISABLED:   'disabled',
-                ABORTED:    'aborted',
-                PENDING:    'grey'
-            }
-
-            var R_COLORS = {}
-            Object.each(COLORS, function(key, item){
-                R_COLORS[key] = item;
-                R_COLORS[key + '_anime'] = RUNNING;
-            });
-
-            var ORDER = [OK, RUNNING, FAIL];
-
-             function getStatusProjects(jobs){
-                var splitted = {
-               		FAIL: [],
-               		OK: [],
-               		PENDING: [],
-               		DISABLED: [],
-               		ABORTED: [],
-               		UNSTABLE: []
-                };
-
-                var overallStatus = OK;
-                var oldIndex = ORDER.indexOf(overallStatus);
-                jobs.each(function (job){
-                    var jobStatus = R_COLORS[job.color];
-                    if (jobStatus == RUNNING){
-                    	var oldColor = job.color.substr(0, job.color.length - 6);
-                    	jobStatus = RUNNING;
-                    } else {
-                        splitted[jobStatus].push(job);
-                    }
-                    var newIndex = ORDER.indexOf(jobStatus);
-                    if (newIndex > oldIndex){
-                    	overallStatus = jobStatus;
-                    }
-                });
-                return {
-                	splitted: splitted,
-                    overallStatus: overallStatus
-                };
-            }
-
-            function update(jobs){
-                var projectStatus = getStatusProjects(jobs);
-                answer.set('text', TEXT[projectStatus.overallStatus]);
-                body.set('class', CLASSES[projectStatus.overallStatus]);
-                affected.empty();
-                if (projectStatus.overalLStatus != OK ){
-                    console.log('not ok');
-	                projectStatus.splitted[projectStatus.overallStatus].each(function(job){
-		                console.log(job);
-		                var li = new Element('li', {
-		                    'html': job.name,
-		                });
-		                affected.adopt(li);
-	                });
-                }
-            }
-
-            function check(){
-                new Request.JSONP({
-                    url: JENKINS_URL + '/api/json',
-                    callbackKey: 'jsonp',
-                    onSuccess: function(data){
-                        update(data.jobs);
-                    }
-                }).send();
-            }
-
-            check();
-            check.periodical(INTERVAL);
+            myWall = new JenkinsWall();
+            enable_wall_logging(myWall);
+            myWall.start();
         });
         </script>        
     </body> 
