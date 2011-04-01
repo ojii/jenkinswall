@@ -17,19 +17,19 @@
                 padding-top: 100px;
             }
             
-            body.success {
+            .success {
                 background: #234F32;
                 background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #092E20), color-stop(1, #234F32));
                 background-image: -moz-linear-gradient(center bottom, #092E20 0%, #234F32 100%);
             }
             
-            body.fail {
+            .fail {
                 background: #f00;
                 background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #f00), color-stop(1, #600));
                 background-image: -moz-linear-gradient(center bottom, #f00 0%, #600 100%);
             }
 
-            body.running {
+            .running {
                 background: #00f;
                 background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #00f), color-stop(1, #006));
                 background-image: -moz-linear-gradient(center bottom, #00f 0%, #006 100%);
@@ -68,7 +68,6 @@
         var myWall;
         window.addEvent('domready', function() {
             myWall = new JenkinsWall();
-            enable_wall_logging(myWall);
             myWall.start();
         });
         </script>        
