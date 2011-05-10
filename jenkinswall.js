@@ -105,7 +105,7 @@ var JenkinsWall = new Class({
 		this.body.set('class', this.options.classes[newstate]);
 		affected.empty();
 		if (newstate != OK ){
-			data.splitted[newstate].each(function(job){
+			this.data.splitted[newstate].each(function(job){
 				var li = new Element('li', {
 					'html': job.name,
 				});
@@ -122,12 +122,12 @@ var JenkinsWall = new Class({
 	    * If the status is not OK, display the unhealthy jobs.
 		*/
 		this.fireEvent("data_received", [data]);
-		var data = this._process_data(data.jobs);
-		this.fireEvent("data_processed", [data]);
-		if ((!this.oldstate) || this.oldstate.overallStatus != data.overallStatus){
-			this.fireEvent("status_changed", [this.oldstate ? this.oldstate.overallStatus : null, data.overallStatus]);
+		this.data = this._process_data(data.jobs);
+		this.fireEvent("data_processed", [this.data]);
+		if ((!this.oldstate) || this.oldstate.overallStatus != this.data.overallStatus){
+			this.fireEvent("status_changed", [this.oldstate ? this.oldstate.overallStatus : null, this.data.overallStatus]);
 		}
-		this.oldstate = data;
+		this.oldstate = this.data;
 	},
 	
 	_process_data: function(jobs){
@@ -145,7 +145,8 @@ var JenkinsWall = new Class({
 			PENDING: [],
 	  		DISABLED: [],
 	  		ABORTED: [],
-	  		UNSTABLE: []
+			UNSTABLE: [],
+			RUNNING: []
 		};
 
 		var overallStatus = OK;
